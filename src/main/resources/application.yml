@@ -1,0 +1,36 @@
+spring:
+    datasource: 
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/man818
+        username: root
+        password: root123
+        
+        
+    redis:
+       host: 127.0.0.1
+       port: 6379
+       database: 0
+       timeout: 60s
+       jedis:
+         pool:
+           max-idle: 500
+           min-idle: 50
+           max-wait:  -1s
+           max-active: -1
+           
+           
+           
+    rabbitmq:
+        host: 10.20.12.98
+        port: 5672
+        username: guest
+        password: guest
+
+server: 
+    port: 9000
+    tomcat:
+        uri-encoding: UTF-8
+          
+mybatis:
+    mapper-locations: classpath:mybatis/mapper/*.xml
+    configLocation: classpath:mybatis/mybatis-config.xml
