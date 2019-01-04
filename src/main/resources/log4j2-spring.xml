@@ -59,6 +59,10 @@
         <!--过滤掉spring和hibernate的一些无用的debug信息-->
         <logger name="org.springframework" level="INFO"/>
         <logger name="org.mybatis" level="INFO"/>
+        <logger name="org.apache" level="INFO" />
+        <logger name="io.netty" level="INFO" />
+        <logger name="io.netty" level="INFO" />
+        <logger name="org.hibernate.validator" level="INFO" />
         
         <root level="all">
             <appender-ref ref="Console"/>

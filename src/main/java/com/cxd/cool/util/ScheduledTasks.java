@@ -17,9 +17,9 @@ public class ScheduledTasks {
     @Autowired
     private TaskExecutor taskExecutor;
 
-    //@Scheduled(cron = "0/20 * * * * ?")
-    //@Async("taskProcessExecutor")
-    public void collectData2q222() {
-        System.out.println("......collectData2q222......" + taskExecutor);
+    @Scheduled(cron = "0 0 12 * * ?")
+    @Async("taskProcessExecutor")
+    public void collectData() {
+        System.out.println("......collectData......" + taskExecutor);
     }
 }

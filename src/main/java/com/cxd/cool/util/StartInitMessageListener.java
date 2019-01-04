@@ -11,6 +11,9 @@ import org.springframework.util.CollectionUtils;
 import com.cxd.cool.domain.RabbitConfigDomain;
 import com.cxd.cool.mq.listener.AbstractMessageLIstener;
 
+/**
+ * 可以换到config中配置
+ */
 @Component
 public class StartInitMessageListener implements InitializingBean {
 
@@ -24,7 +27,7 @@ public class StartInitMessageListener implements InitializingBean {
             for (ChannelAwareMessageListener messageListener : rabbitConfigDomain.getMessageListeners()) {
                 SimpleMessageListenerContainer container1 = new SimpleMessageListenerContainer();
                 container1.setConnectionFactory(rabbitConfigDomain.getConnectionFactory());
-                container1.setAcknowledgeMode(AcknowledgeMode.AUTO); // 设置确认模式手工确认
+                container1.setAcknowledgeMode(AcknowledgeMode.AUTO); // 设置确认模式手工确认MANUAL
                 container1.setMaxConcurrentConsumers(1);
                 container1.setConcurrentConsumers(1);
                 container1.setQueueNames(((AbstractMessageLIstener) messageListener).getQueueName());

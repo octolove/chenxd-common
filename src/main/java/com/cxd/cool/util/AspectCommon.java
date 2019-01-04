@@ -44,18 +44,17 @@ public class AspectCommon {
 
     /**
      * 每个方法时间统计
-     * 
-     * @param joinPoint
+     * && @annotation(org.springframework.web.bind.annotation.RequestMapping)"
+     * 不能在有视图的action执行，不然无法返回到jsp页面？？
      */
-    @SuppressWarnings({ "rawtypes", "unused" })
-    @Around("execution(* com.cxd.cool..*.*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    @Around("execution(* com.cxd.cool.service..*.*(..))")
     public void executeTtime(ProceedingJoinPoint joinPoint) {
         logger.info(">>>>>>>>>>>time bengin");
         long startTime = System.currentTimeMillis();
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
-            
+
             // 拦截的实体类
             Object target = joinPoint.getTarget();
             String methodName = joinPoint.getSignature().getName();
