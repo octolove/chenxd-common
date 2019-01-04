@@ -30,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
 
+    // 监听器集合
     @Autowired
     private List<ChannelAwareMessageListener> messageListener;
 

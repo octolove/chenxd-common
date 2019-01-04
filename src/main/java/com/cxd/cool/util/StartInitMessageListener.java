@@ -13,6 +13,7 @@ import com.cxd.cool.mq.listener.AbstractMessageLIstener;
 
 /**
  * 可以换到config中配置
+ * 初始化MQ监听器
  */
 @Component
 public class StartInitMessageListener implements InitializingBean {

@@ -27,8 +27,6 @@ public class UserAction {
 
     @RequestMapping(value = "/list/{pageNum}/{pageSize}")
     public String userList(@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize, ModelMap map) {
-        logger.info(">>>>>>>>>>>>>>pageNum={}, pageSize={}", pageNum, pageSize);
-
         PageBean<UserInfo> pageBean = userService.list(pageNum, pageSize);
         map.put("pageInfo", pageBean);
         return "users/list";

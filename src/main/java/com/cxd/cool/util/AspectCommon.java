@@ -16,6 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.cxd.cool.annotation.LogPrint;
+import com.cxd.cool.base.BusinessException;
 
 @Aspect
 @Component
@@ -44,10 +45,12 @@ public class AspectCommon {
 
     /**
      * 每个方法时间统计
+     * 
+     * @throws Throwable
      */
     @SuppressWarnings({ "unused", "rawtypes" })
     @Around("execution(* com.cxd.cool..*.*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
-    public Object executeTtime(ProceedingJoinPoint joinPoint) {
+    public Object executeTtime(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.info(">>>>>>>>>>>time bengin");
         Object object = null;
         long startTime = System.currentTimeMillis();
@@ -72,10 +75,16 @@ public class AspectCommon {
             object = joinPoint.proceed();
 
         } catch (Throwable e) {
-            e.printStackTrace();
+            if (e instanceof BusinessException) {
+                throw e;
+            } else {
+                logger.error("error:" + e);
+            }
         } finally {
             logger.info(">>>>>>>>>time bengin execute time={}", (System.currentTimeMillis() - startTime));
         }
+
+        // around需要返回结果
         return object;
     }
 }

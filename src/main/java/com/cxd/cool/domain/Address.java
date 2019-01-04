@@ -1,7 +1,5 @@
 package com.cxd.cool.domain;
 
-import javafx.beans.binding.StringBinding;
-
 public class Address {
 
     private String city;
