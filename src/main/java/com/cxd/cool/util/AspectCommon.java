@@ -44,12 +44,12 @@ public class AspectCommon {
 
     /**
      * 每个方法时间统计
-     * && @annotation(org.springframework.web.bind.annotation.RequestMapping)"
-     * 不能在有视图的action执行，不然无法返回到jsp页面？？
      */
-    @Around("execution(* com.cxd.cool.service..*.*(..))")
-    public void executeTtime(ProceedingJoinPoint joinPoint) {
+    @SuppressWarnings({ "unused", "rawtypes" })
+    @Around("execution(* com.cxd.cool..*.*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    public Object executeTtime(ProceedingJoinPoint joinPoint) {
         logger.info(">>>>>>>>>>>time bengin");
+        Object object = null;
         long startTime = System.currentTimeMillis();
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -69,11 +69,13 @@ public class AspectCommon {
             }
 
             logger.info(">>>>>>>>methodName={},args={}", methodName, sBuffer.toString());
-            joinPoint.proceed();
+            object = joinPoint.proceed();
+
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
             logger.info(">>>>>>>>>time bengin execute time={}", (System.currentTimeMillis() - startTime));
         }
+        return object;
     }
 }

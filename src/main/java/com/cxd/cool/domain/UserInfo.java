@@ -8,11 +8,11 @@ public class UserInfo implements Serializable {
 
     private String uid;
 
-    private String sex;
+    private String upass;
 
     private String uname;
 
-    private Address address;
+    private String address;
 
     public String getUid() {
         return uid;
@@ -22,12 +22,12 @@ public class UserInfo implements Serializable {
         this.uid = uid;
     }
 
-    public String getSex() {
-        return sex;
+    public String getUpass() {
+        return upass;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setUpass(String upass) {
+        this.upass = upass;
     }
 
     public String getUname() {
@@ -38,15 +38,12 @@ public class UserInfo implements Serializable {
         this.uname = uname;
     }
 
-    public Address getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
 }

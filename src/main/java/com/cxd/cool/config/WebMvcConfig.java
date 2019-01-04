@@ -1,7 +1,9 @@
 package com.cxd.cool.config;
 
 import java.util.List;
+import java.util.Properties;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -20,8 +22,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.cxd.cool.domain.RabbitConfigDomain;
 import com.cxd.cool.util.RequestHandle;
+import com.github.pagehelper.PageHelper;
 
 @Configuration
+@MapperScan("com.cxd.cool.mapper")
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
@@ -89,14 +93,27 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        logger.info(">>>>>>>>>>>>>>>>addViewControllers");
         registry.addViewController("/toLogin").setViewName("users/login");
-        registry.addViewController("/test").setViewName("test");
     }
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        logger.info(">>>>>>>>>>>>>>>>configureViewResolvers");
         registry.jsp("/WEB-INF/views/", ".jsp");
+    }
+
+    /**
+     * 分页插件配置
+     */
+    @Bean
+    public PageHelper pageHelper() {
+        PageHelper pageHelper = new PageHelper();
+        Properties p = new Properties();
+        p.setProperty("offsetAsPageNum", "true");
+        p.setProperty("rowBoundsWithCount", "true");
+        p.setProperty("reasonable", "true");
+        // 配置mysql数据库
+        p.setProperty("dialect", "mysql");
+        pageHelper.setProperties(p);
+        return pageHelper;
     }
 }

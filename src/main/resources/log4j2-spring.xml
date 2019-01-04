@@ -63,6 +63,7 @@
         <logger name="io.netty" level="INFO" />
         <logger name="io.netty" level="INFO" />
         <logger name="org.hibernate.validator" level="INFO" />
+        <logger name="ocom.zaxxer.hikari" level="INFO" />
         
         <root level="all">
             <appender-ref ref="Console"/>

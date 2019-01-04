@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>  
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
-<mapper namespace="com.danny.jer.man818.mapper.UserMapper">  
-   
-  <select id="findUserInfo" resultType="com.cxd.cool.domain.UserInfo">  
-    SELECT id ,username ,passwd ,address FROM  username WHERE id=#{id};  
-  </select> 
-  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cxd.cool.mapper.UserMapper">
+
+	<select id="findUserInfo"
+		resultType="com.cxd.cool.domain.UserInfo">
+		SELECT
+		id AS uid,
+		username AS uname,
+		passwd AS upass,
+		address
+		FROM
+		USERINFO
+		WHERE
+		id =#{id}
+	</select>
+
+	<insert id="inserUser"
+		parameterType="com.cxd.cool.domain.UserInfo">
+		INSERT INTO USERINFO
+		(username,
+		passwd,
+		address)
+		VALUES
+		(#username#,
+		#passwd#,
+		#address#
+		)
+	</insert>
+
+	<select id="findAllUserInfo"
+	resultType="com.cxd.cool.domain.UserInfo">
+	SELECT
+	id AS uid,
+	username AS uname,
+	passwd AS upass,
+	address
+	FROM
+	USERINFO
+	</select>
 </mapper>  

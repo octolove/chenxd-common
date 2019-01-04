@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cxd.cool.domain.UserInfo;
 
 /**
- * @author Administrator
+ *redis和mq的demo
+ *默认返回json
  *
  */
 @RestController
