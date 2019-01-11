@@ -1,5 +1,7 @@
 package com.cxd.cool.config;
 
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -9,9 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -20,12 +24,19 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.cxd.cool.domain.RabbitConfigDomain;
 import com.cxd.cool.util.RequestHandle;
 import com.github.pagehelper.PageHelper;
 
+/**
+ * 工程配置文件
+ */
 @Configuration
 @MapperScan("com.cxd.cool.mapper")
+// @ServletComponentScan 扫描filter servlet listener
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
@@ -66,25 +77,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         registry.addResourceHandler("/myresoure/**").addResourceLocations("classpath:/myresoure/");
-
     }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        /**
-         * FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-         * FastJsonConfig config = new FastJsonConfig();
-         * config.setSerializerFeatures(SerializerFeature.WriteMapNullValue);//保留空的字段
-         * //SerializerFeature.WriteNullStringAsEmpty,//String null -> ""
-         * //SerializerFeature.WriteNullNumberAsZero//Number null -> 0
-         * // 按需配置，更多参考FastJson文档哈
-         * converter.setFastJsonConfig(config);
-         * converter.setDefaultCharset(Charset.forName("UTF-8"));
-         * converter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
-         * converters.add(converter);
-         */
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        FastJsonConfig config = new FastJsonConfig();
+        // 保留空的字段
+        config.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
+        // 按需配置，更多参考FastJson文档
+        converter.setFastJsonConfig(config);
+        converter.setDefaultCharset(Charset.forName("UTF-8"));
+        converter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
+        converters.add(converter);
+
     }
 
     /**
@@ -112,9 +119,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
         p.setProperty("offsetAsPageNum", "true");
         p.setProperty("rowBoundsWithCount", "true");
         p.setProperty("reasonable", "true");
-        // 配置mysql数据库
         p.setProperty("dialect", "mysql");
         pageHelper.setProperties(p);
         return pageHelper;
+    }
+
+    /**
+     * 配置Filter执行顺序 order值越小在前
+     *  或用@WebFilter+@Order
+     */
+    //@Bean
+    public FilterRegistrationBean FilterOrder() {
+        return null;
     }
 }
