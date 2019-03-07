@@ -7,7 +7,7 @@ public class Address {
     private String shen;
 
     private String qu;
-    
+
     private String addname;
 
     public String getCity() {
@@ -41,5 +41,9 @@ public class Address {
     public void setAddname(String addname) {
         this.addname = addname;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Address [city=" + city + ", shen=" + shen + ", qu=" + qu + ", addname=" + addname + "]";
+    }
 }

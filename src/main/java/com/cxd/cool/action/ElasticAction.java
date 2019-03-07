@@ -59,7 +59,7 @@ public class ElasticAction {
         } catch (Exception e) {
             logger.error("err:{}", e);
         }
-        return optional.isPresent() ? optional.get() : new Article();
+        return optional.orElse(new Article());
     }
 
     @RequestMapping(value = "/searchTitle/{title}")
