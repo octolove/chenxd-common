@@ -31,11 +31,12 @@ public class RedisRabbitAction {
 
     @RequestMapping(value = "/sayhello3")
     public String sayHello3() {
-
-        redisTemplate.opsForValue().set("qq", "525104085");
-        redisTemplate.opsForHash().put("cxd", "name", "xd");
-        redisTemplate.opsForHash().put("cxd", "age", "11");
-        redisTemplate.opsForHash().put("cxd", "address", "nj");
+        /**
+         * redisTemplate.opsForValue().set("qq", "525104085");
+         * redisTemplate.opsForHash().put("cxd", "name", "xd");
+         * redisTemplate.opsForHash().put("cxd", "age", "11");
+         * redisTemplate.opsForHash().put("cxd", "address", "nj");
+         */
 
         rabbitTemplate.convertAndSend("cxdTopicExchange", "cxd.1", new Date().getTime());
         rabbitTemplate.convertAndSend("cxdTopicExchange2", "cxd2.1", new Date().getTime());

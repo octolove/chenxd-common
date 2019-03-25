@@ -14,7 +14,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
+@Configuration
 public class RabbitmqConfig {
 
     /**
@@ -105,42 +105,45 @@ public class RabbitmqConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        // 发送设置MessageConverter，默认是SimpleMessageConverter
+        template.setMessageConverter(new Jackson2JsonMessageConverter());
         return template;
     }
-//
-//    @Bean
-//    public MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory) {
-//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//        container.setConnectionFactory(connectionFactory);
-//        container.setAcknowledgeMode(AcknowledgeMode.AUTO); // 设置确认模式手工确认
-//        container.setMaxConcurrentConsumers(1);
-//        container.setConcurrentConsumers(1);
-//
-//        container.setQueueNames("cxd.code");
-//        container.setMessageListener(new CommMessageListener());
-//        return container;
-//    }
-//
-//    @Bean
-//    public MessageListenerContainer messageListenerContainer2(ConnectionFactory connectionFactory) {
-//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//        container.setConnectionFactory(connectionFactory);
-//        container.setAcknowledgeMode(AcknowledgeMode.AUTO); // 设置确认模式手工确认
-//        container.setMaxConcurrentConsumers(1);
-//        container.setConcurrentConsumers(1);
-//
-//        container.setQueueNames("cxd2.code2");
-//        container.setMessageListener(new CommMessageListener2());
-//        
-//        container.start();
-//        return container;
-//    }
+    //
+    // @Bean
+    // public MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory) {
+    // SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+    // container.setConnectionFactory(connectionFactory);
+    // container.setAcknowledgeMode(AcknowledgeMode.AUTO); // 设置确认模式手工确认
+    // container.setMaxConcurrentConsumers(1);
+    // container.setConcurrentConsumers(1);
+    //
+    // container.setQueueNames("cxd.code");
+    // container.setMessageListener(new CommMessageListener());
+    // return container;
+    // }
+    //
+    // @Bean
+    // public MessageListenerContainer messageListenerContainer2(ConnectionFactory connectionFactory) {
+    // SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+    // container.setConnectionFactory(connectionFactory);
+    // container.setAcknowledgeMode(AcknowledgeMode.AUTO); // 设置确认模式手工确认
+    // container.setMaxConcurrentConsumers(1);
+    // container.setConcurrentConsumers(1);
+    //
+    // container.setQueueNames("cxd2.code2");
+    // container.setMessageListener(new CommMessageListener2());
+    //
+    // container.start();
+    // return container;
+    // }
 
     @Bean
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         Jackson2JsonMessageConverter jackSonConverter = new Jackson2JsonMessageConverter();
+        // 监听设置MessageConverter
         factory.setMessageConverter(jackSonConverter);
         return factory;
     }

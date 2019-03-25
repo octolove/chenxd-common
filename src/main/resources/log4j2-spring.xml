@@ -1,76 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--设置log4j2的自身log级别为warn-->
-<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
-<!--Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置， 当设置成trace时，你会看到log4j2内部各种详细输出-->
-<!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数-->
-<configuration status="warn" monitorInterval="30">
-    <!--先定义所有的appender-->
-    <appenders>
-        <!--这个输出控制台的配置-->
-        <console name="Console" target="SYSTEM_OUT">
-            <!--输出日志的格式-->
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
-        </console>
-        
-        <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFileInfo" fileName="${sys:user.home}/logs/chenxd-common/common-info.log"
-                     filePattern="${sys:user.home}/logs/chenxd-common/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
-            <Filters>
-                <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
-                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
-            </Filters>
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
-            </Policies>
-        </RollingFile>
- 
-        <RollingFile name="RollingFileWarn" fileName="${sys:user.home}/logs/chenxd-common/common-warn.log"
-                     filePattern="${sys:user.home}/logs/chenxd-common/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log">
-            <Filters>
-                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
-                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
-            </Filters>
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
-            </Policies>
-            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
-            <DefaultRolloverStrategy max="20"/>
-        </RollingFile>
- 
-        <RollingFile name="RollingFileError" fileName="${sys:user.home}/logs/chenxd-common/common-error.log"
-                     filePattern="${sys:user.home}/logs/chenxd-common/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
-            <ThresholdFilter level="ERROR"/>
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
-            </Policies>
-        </RollingFile>
- 
-    </appenders>
-    
-    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
-    <loggers>
-        <!--过滤掉spring和hibernate的一些无用的debug信息-->
-        <logger name="org.springframework" level="INFO"/>
-        <logger name="org.mybatis" level="INFO"/>
-        <logger name="org.apache" level="INFO" />
-        <logger name="io.netty" level="INFO" />
-        <logger name="io.netty" level="INFO" />
-        <logger name="org.hibernate.validator" level="INFO" />
-        <logger name="ocom.zaxxer.hikari" level="INFO" />
-        
-        <root level="all">
-            <appender-ref ref="Console"/>
-            <appender-ref ref="RollingFileInfo"/>
-            <appender-ref ref="RollingFileWarn"/>
-            <appender-ref ref="RollingFileError"/>
-        </root>
-    </loggers>
- 
+<!-- 请不要修改该文件！！！！！！ -->
+<configuration debug="false" scan="true"
+	scanPeriod="20 seconds">
+	<springProperty name="moduleid" scope="context"
+		source="chenxd-common" />
+
+	<!-- 文件输出格式 -->
+	<property name="log.pattern"
+		value="%d{HH:mm:ss.SSS} [${moduleid:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}] [%thread] %-5level %logger{40} %X{txlog} - %msg%n" />
+	<property name="monitor.log.pattern"
+		value="{&quot;timestamp&quot;: &quot;%d{HH:mm:ss.SSS}&quot;, &quot;trace&quot;:&quot;%X{X-B3-TraceId:-}&quot;,&quot;span&quot;:&quot;%X{X-B3-SpanId:-}&quot;,&quot;thread&quot;: &quot;%thread&quot;, &quot;level&quot;: &quot;%-5level&quot;, &quot;msg&quot;: %msg}%n" />
+
+	<!-- 每天产生一个文件 -->
+	<appender
+		class="ch.qos.logback.core.rolling.RollingFileAppender" name="logfile">
+		<!-- 文件路径 -->
+		<file>/opt/log/${brand}/${moduleid}-${env}-${HOSTNAME}.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 文件名称 -->
+			<fileNamePattern>/opt/log/${moduleid}-${HOSTNAME}.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 文件最大保存历史数量 -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder
+			class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout
+				class="com.yum.ec3.base.logback.ThrowableEnhancedPatternLayout">
+				<pattern>${log.pattern}</pattern>
+			</layout>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="error-log"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/opt/log/${brand}/${moduleid}-${env}-${HOSTNAME}-error.log
+		</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/opt/log/${moduleid}-${HOSTNAME}.%d{yyyy-MM-dd}-error.log
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder
+			class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout
+				class="com.yum.ec3.base.logback.ThrowableEnhancedPatternLayout">
+				<pattern>${log.pattern}</pattern>
+			</layout>
+			<charset>UTF-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender class="ch.qos.logback.core.ConsoleAppender"
+		name="console">
+		<encoder
+			class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${log.pattern}</pattern>
+			</layout>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<logger level="WARN"
+		name="com.netflix.discovery.InstanceRegionChecker" />
+	<logger level="INFO" name="org.springframework" />
+	<logger level="INFO" name="org.eclipse" />
+	<logger level="INFO" name="org.apache" />
+	<logger level="INFO" name="com.netflix" />
+	<logger level="INFO" name="springfox.documentation" />
+	<logger level="INFO" name="com.zaxxer.hikari.pool" />
+	<logger level="INFO" name="com.microsoft.sqlserver.jdbc" />
+	<logger level="INFO" name="org.mybatis" />
+	<logger level="INFO" name="io.netty" />
+	<logger level="INFO" name="org.hibernate.validator" />
+	<logger level="INFO" name="ocom.zaxxer.hikari" />
+	<logger level="INFO" name="com.netflix" />
+
+	<root level="INFO">
+		<appender-ref ref="logfile" />
+		<appender-ref ref="console" />
+		<appender-ref ref="error-log" />
+	</root>
 </configuration>

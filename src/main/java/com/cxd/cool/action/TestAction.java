@@ -28,11 +28,11 @@ public class TestAction {
     @RequestMapping(value = "/test")
     public void testok() {
         logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>testok" + new SimpleDateFormat("yyyy-mm-dd  HH:mm:ss").format(new Date()));
-        try {
-            Thread.sleep(1000 * 8);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(1000 * 8);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
