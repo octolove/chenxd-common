@@ -9,7 +9,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +27,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.cxd.cool.domain.RabbitConfigDomain;
+import com.cxd.cool.mq.listener.IMessageListener;
 import com.cxd.cool.util.RequestHandle;
 import com.github.pagehelper.PageHelper;
 
@@ -43,7 +43,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     // 监听器集合
     @Autowired
-    private List<ChannelAwareMessageListener> messageListener;
+    private List<IMessageListener> messageListeners;
 
     @Bean("taskProcessExecutor")
     public TaskExecutor taskExecutor() {
@@ -60,7 +60,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public RabbitConfigDomain rabbitConfigDomain(ConnectionFactory connectionFactory) {
         RabbitConfigDomain rabbitConfigDomain = new RabbitConfigDomain();
-        rabbitConfigDomain.setMessageListeners(messageListener);
+        rabbitConfigDomain.setMessageListeners(messageListeners);
         rabbitConfigDomain.setConnectionFactory(connectionFactory);
         return rabbitConfigDomain;
     }
@@ -126,9 +126,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 配置Filter执行顺序 order值越小在前
-     *  或用@WebFilter+@Order
+     * 或用@WebFilter+@Order
      */
-    //@Bean
+    // @Bean
     public FilterRegistrationBean FilterOrder() {
         return null;
     }

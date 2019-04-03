@@ -6,25 +6,27 @@ import java.util.List;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 
+import com.cxd.cool.mq.listener.IMessageListener;
+
 public class RabbitConfigDomain {
 
     private ConnectionFactory connectionFactory;
 
-    private List<ChannelAwareMessageListener> messageListeners;
+    private List<IMessageListener> messageListeners;
 
     public RabbitConfigDomain() {
         messageListeners = new ArrayList<>();
     }
 
-    public void setMessageListeners(List<ChannelAwareMessageListener> messageListeners) {
+    public void setMessageListeners(List<IMessageListener> messageListeners) {
         this.messageListeners = messageListeners;
     }
 
-    public List<ChannelAwareMessageListener> getMessageListeners() {
+    public List<IMessageListener> getMessageListeners() {
         return messageListeners;
     }
 
-    public void addMessageListener(ChannelAwareMessageListener messageListener) {
+    public void addMessageListener(IMessageListener messageListener) {
         if (messageListener != null) {
             messageListeners.add(messageListener);
         }
