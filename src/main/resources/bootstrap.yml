@@ -9,14 +9,25 @@ spring:
         url: jdbc:mysql://localhost:3306/man818
         username: root
         password: root123
+        type: com.zaxxer.hikari.HikariDataSource
+        #连接池
+        hikari:
+           minimum-idle: 5
+           maximum-pool-size: 20
+           auto-commit: true
+           idle-timeout: 30000
+           pool-name: DatebookHikariCP
+           max-lifetime: 1800000
+           connection-timeout: 30000
+           connection-test-query: SELECT 1
         
     application:
         name: chenxd-common
     
     
     #根据不同环境配置    
-    profiles:
-        active: dev
+    #profiles:
+        #active: dev
         
         
     redis:
@@ -43,21 +54,27 @@ spring:
         elasticsearch:
             repositories:
                 enabled: true
-            cluster-nodes: 127.0.0.1:9300
-            cluster-name: chenxd_cluster
+            cluster-nodes: 127.0.0.1:9200
+            cluster-name: elasticsearch
             
     cloud:
         loadbalancer:
             retry:
                 enabled: true
+        config:
+           name: test002
+           uri: http://127.0.0.1:9001/ #Config server的uri
+           label: master
+           #discovery: 
+              #enabled: true
+              #serviceId: chenxd-configServer
                 
-            
 server: 
-    port: 9001
+    port: 9002
     tomcat:
         uri-encoding: UTF-8
    
-          
+#mybatis配置         
 mybatis:
     mapper-locations: classpath:mybatis/mapper/*.xml
     configLocation: classpath:mybatis/mybatis-config.xml
@@ -69,7 +86,9 @@ ribbon:
     MaxAutoRetriesNextServer: 0
     ReadTimeout: 4000
     ConnectTimeout: 4000   
-    
+
+
+#eureka配置   
 eureka:
     client:
         serviceUrl:
@@ -78,7 +97,9 @@ eureka:
         appname: chenxd-common
         instance-id: ${eureka.instance.appname}:${spring.cloud.client.ip_address}:${server.port}
         prefer-ip-address: true
-        
+
+
+#熔断超时配置      
 hystrix:
   command:
       default: 
@@ -88,7 +109,13 @@ hystrix:
                isolation:
                    thread:
                        timeoutInMilliseconds: 10000
-
+#打开hystrix
 feign:
   hystrix:
-    enabled: true 
+    enabled: true
+
+
+#SpringBoot 1.5.X 以上默认开通了安全认证，如果不关闭会要求权限   
+management:
+  security:
+    enabled: false    

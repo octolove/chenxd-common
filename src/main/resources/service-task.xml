@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd  
+            http://www.springframework.org/schema/context  
+            http://www.springframework.org/schema/context/spring-context-4.3.xsd  
+            http://www.springframework.org/schema/tx  
+            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd  
+            http://www.springframework.org/schema/util  
+            http://www.springframework.org/schema/util/spring-util-4.3.xsd  
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+            http://www.springframework.org/schema/task   
+            http://www.springframework.org/schema/task/spring-task-4.3.xsd">
+
+	<bean id="chenxdJob"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.cxd.cool.task.ChenxdJob" />
+		<property name="durability" value="true"></property>
+	</bean>
+
+	<bean id="chenxdTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="chenxdJob" />
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<value>0 0/1 * * * ?</value>
+		</property>
+		<property name="group" value="chenxd.common"></property>
+	</bean>
+
+	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+	<bean id="chenxdServiceTaskScheduler" lazy-init="false"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="chenxdTrigger" />
+			</list>
+		</property>
+		<property name="autoStartup" value="true" />
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+				<prop key="org.quartz.threadPool.threadCount">1</prop>
+				<prop key="org.quartz.threadPool.threadPriority">5</prop>
+				<prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+				<prop key="org.quartz.scheduler.instanceName">chenxdServiceTaskScheduler</prop>
+				<prop key="org.quartz.scheduler.rmi.export">false</prop>
+				<prop key="org.quartz.scheduler.rmi.proxy">false</prop>
+				<prop key="org.quartz.scheduler.wrapJobExecutionInUserTransaction">false</prop>
+				<prop key="org.quartz.jobStore.selectWithLockSQL">SELECT * FROM {0}LOCKS WHERE LOCK_NAME = ? FOR UPDATE</prop>
+				<prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+				<prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+				<prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.StdJDBCDelegate</prop>
+				<prop key="org.quartz.jobStore.useProperties">true</prop>
+				<prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
+				<prop key="org.quartz.jobStore.isClustered">true</prop>
+				<prop key="org.quartz.jobStore.clusterCheckinInterval">20000</prop>
+			</props>
+		</property>
+		<property name="schedulerName" value="chenxdServiceTaskScheduler" />
+	</bean>
+</beans>

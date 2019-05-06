@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cxd.cool.base.BusinessException;
@@ -14,6 +15,7 @@ import com.cxd.cool.base.BusinessException;
  * 统一异常处理
  */
 @ControllerAdvice
+//@RestControllerAdvice
 public class ExceptionHandle {
 
     @ExceptionHandler(BusinessException.class)

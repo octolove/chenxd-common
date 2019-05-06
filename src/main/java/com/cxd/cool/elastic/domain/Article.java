@@ -2,6 +2,8 @@ package com.cxd.cool.elastic.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Document(indexName = "blog",
     type = "Article",
@@ -13,7 +15,8 @@ public class Article {
 
     @Id
     private String id;
-
+    
+    @Field(type = FieldType.Text,analyzer = "ik_max_word")
     private String title;
 
     private String article;

@@ -6,6 +6,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,13 +27,8 @@ public class TestAction {
     private AddressClient addressClient;
 
     @RequestMapping(value = "/test")
-    public void testok() {
+    public void testok(@RequestBody Address address) {
         logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>testok" + new SimpleDateFormat("yyyy-mm-dd  HH:mm:ss").format(new Date()));
-//        try {
-//            Thread.sleep(1000 * 8);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
     }
 

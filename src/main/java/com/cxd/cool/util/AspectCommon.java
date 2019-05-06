@@ -50,7 +50,7 @@ public class AspectCommon {
      */
     @Around("execution(* com.cxd.cool..*.*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public Object executeTtime(ProceedingJoinPoint joinPoint) throws Throwable {
-        //logger.info(">>>>>>>>>>>time bengin");
+        // logger.info(">>>>>>>>>>>time bengin");
         Object object = null;
         long startTime = System.currentTimeMillis();
         try {
@@ -70,7 +70,7 @@ public class AspectCommon {
                 sBuffer.append(arg.toString()).append("");
             }
 
-            //logger.info(">>>>>>>>methodName={},args={}", methodName, sBuffer.toString());
+            // logger.info(">>>>>>>>methodName={},args={}", methodName, sBuffer.toString());
             object = joinPoint.proceed();
 
         } catch (Throwable e) {

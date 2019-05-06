@@ -8,7 +8,7 @@ import com.cxd.cool.domain.Address;
 @RestController
 @RequestMapping(value = "/member22")
 public class TestAction2 {
-
+    
     @RequestMapping(value = "/test")
     public Address testok() {
         Address aa = new Address();

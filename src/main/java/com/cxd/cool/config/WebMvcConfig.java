@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -36,6 +37,7 @@ import com.github.pagehelper.PageHelper;
  */
 @Configuration
 @MapperScan("com.cxd.cool.mapper")
+@ImportResource({ "classpath:service-task.xml" })
 // @ServletComponentScan 扫描filter servlet listener
 public class WebMvcConfig implements WebMvcConfigurer {
 
@@ -50,7 +52,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(20);
         taskExecutor.setMaxPoolSize(50);
-        taskExecutor.setQueueCapacity(6000);
+        taskExecutor.setQueueCapacity(6000);//默认maxValue
         taskExecutor.setKeepAliveSeconds(300);
         taskExecutor.setThreadNamePrefix("thread-");
         taskExecutor.initialize();
