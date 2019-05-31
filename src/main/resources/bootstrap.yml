@@ -4,7 +4,7 @@ properties:
       version: v1_1_0
 
 spring:
-    datasource: 
+    datasource:
         driverClassName: com.mysql.jdbc.Driver
         url: jdbc:mysql://localhost:3306/man818
         username: root
@@ -20,16 +20,22 @@ spring:
            max-lifetime: 1800000
            connection-timeout: 30000
            connection-test-query: SELECT 1
-        
+
     application:
         name: chenxd-common
-    
-    
-    #根据不同环境配置    
-    #profiles:
-        #active: dev
-        
-        
+
+    jpa:
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+      show-sql: true
+      properties:
+        hibenate:
+          format_sql: true
+
+
+    #根据不同环境配置
+#    profiles:
+#        active: dev
+
     redis:
        host: 127.0.0.1
        port: 6379
@@ -41,81 +47,89 @@ spring:
            min-idle: 50
            max-wait:  -1s
            max-active: -1
-           
-           
-    rabbitmq:
-        host: 10.20.12.98
-        port: 5672
-        username: guest
-        password: guest
-        
-        
-    data:
-        elasticsearch:
-            repositories:
-                enabled: true
-            cluster-nodes: 127.0.0.1:9200
-            cluster-name: elasticsearch
-            
-    cloud:
-        loadbalancer:
-            retry:
-                enabled: true
-        config:
-           name: test002
-           uri: http://127.0.0.1:9001/ #Config server的uri
-           label: master
-           #discovery: 
-              #enabled: true
-              #serviceId: chenxd-configServer
-                
-server: 
-    port: 9002
+
+
+#    rabbitmq:
+#        host: 10.20.12.98
+#        port: 5672
+#        username: guest
+#        password: guest
+
+
+#    data:
+#        elasticsearch:
+#            repositories:
+#                enabled: true
+#            cluster-nodes: 127.0.0.1:9200
+#            cluster-name: elasticsearch
+
+#    cloud:
+#        loadbalancer:
+#            retry:
+#                enabled: true
+#        config:
+#           name: test002
+#           uri: http://127.0.0.1:9001/ #Config server的uri
+#           label: master
+#           #discovery:
+#              #enabled: true
+#              #serviceId: chenxd-configServer
+
+server:
+    port: 9001
     tomcat:
         uri-encoding: UTF-8
-   
-#mybatis配置         
+
+#mybatis配置
 mybatis:
     mapper-locations: classpath:mybatis/mapper/*.xml
     configLocation: classpath:mybatis/mybatis-config.xml
 
-
-#userInfo.center:非eureka程序在这里的配置超时不生效？但是写在代码中的超时生效
-ribbon:
-    MaxAutoRetries: 1
-    MaxAutoRetriesNextServer: 0
-    ReadTimeout: 4000
-    ConnectTimeout: 4000   
-
-
-#eureka配置   
-eureka:
-    client:
-        serviceUrl:
-            defaultZone: http://127.0.0.1:9000/eureka/
-    instance:
-        appname: chenxd-common
-        instance-id: ${eureka.instance.appname}:${spring.cloud.client.ip_address}:${server.port}
-        prefer-ip-address: true
+#非eureka程序在这里的配置超时不生效？但是写在代码中的超时生效
+#userInfo.center:
+#  ribbon:
+#    MaxAutoRetries: 1
+#    MaxAutoRetriesNextServer: 0
+#    ReadTimeout: 4000
+#    ConnectTimeout: 4000
 
 
-#熔断超时配置      
-hystrix:
-  command:
-      default: 
-          execution:
-               timeout:
-                   enabled: false
-               isolation:
-                   thread:
-                       timeoutInMilliseconds: 10000
+#eureka配置
+#eureka:
+#    client:
+#        serviceUrl:
+#            defaultZone: http://127.0.0.1:9000/eureka/
+#    instance:
+#        appname: chenxd-common
+#        instance-id: ${eureka.instance.appname}:${spring.cloud.client.ip_address}:${server.port}
+#        prefer-ip-address: true
+
+
+#熔断超时配置
+#hystrix:
+#  command:
+#      default:
+#          execution:
+#               timeout:
+#                   enabled: false
+#               isolation:
+#                   thread:
+#                       timeoutInMilliseconds: 10000
 #打开hystrix
-feign:
-  hystrix:
-    enabled: true
+#feign:
+#  hystrix:
+#    enabled: true
 
 
-#SpringBoot 1.5.X 以上默认开通了安全认证，如果不关闭会要求权限   
+#SpringBoot2.x新配置
 management:
-  security:
-    enabled: false    
+  server:
+    port: 9999
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always

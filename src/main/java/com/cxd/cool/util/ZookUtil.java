@@ -93,7 +93,7 @@ public class ZookUtil {
 
             // 删除本身节点
             Thread.sleep(1000);
-            cf.delete().deletingChildrenIfNeeded().forPath("/chen");
+            //cf.delete().deletingChildrenIfNeeded().forPath("/chen");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,12 +107,6 @@ public class ZookUtil {
                 System.out.println("NodeCache changed, data is: " + new String(nodeCache.getCurrentData().getData()));
             }
         });
-        
-        //nodeCache.close();
-
-        // TreeCache treeCache=new TreeCache();
-
-        // ----------------------------
     }
 
 }

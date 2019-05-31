@@ -14,8 +14,8 @@ import com.cxd.cool.client.AddressClient;
 import com.cxd.cool.client.UserInfoClient;
 import com.cxd.cool.domain.Address;
 
-@RestController
-@RequestMapping(value = "/member")
+//@RestController
+//@RequestMapping(value = "/member")
 public class TestAction {
 
     private Logger logger = LoggerFactory.getLogger(TestAction.class);
@@ -29,6 +29,8 @@ public class TestAction {
     @RequestMapping(value = "/test")
     public void testok(@RequestBody Address address) {
         logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>testok" + new SimpleDateFormat("yyyy-mm-dd  HH:mm:ss").format(new Date()));
+        
+        throw new RuntimeException("33242342");
 
     }
 

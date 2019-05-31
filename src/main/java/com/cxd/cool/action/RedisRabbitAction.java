@@ -19,8 +19,8 @@ import com.cxd.cool.domain.UserInfo;
  * 默认返回json
  *
  */
-@RestController
-@RequestMapping(value = "/test")
+//@RestController
+//@RequestMapping(value = "/test")
 public class RedisRabbitAction {
 
     @Autowired

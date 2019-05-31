@@ -1,41 +1,49 @@
 package com.cxd.cool.action;
 
+import com.cxd.cool.entity.UserinfoEntity;
+import com.cxd.cool.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import com.cxd.cool.domain.PageBean;
-import com.cxd.cool.domain.UserInfo;
-import com.cxd.cool.service.IUserService;
+import java.util.List;
+import java.util.Optional;
 
-/**
- * jsp页面demo
- *
- */
-@Controller
-@RequestMapping(value = "/user")
+@RestController
+@RequestMapping("/user")
 public class UserAction {
 
     private Logger logger = LoggerFactory.getLogger(UserAction.class);
 
     @Autowired
-    private IUserService userService;
+    private UserRepository userRepository;
 
-    @RequestMapping(value = "/list/{pageNum}/{pageSize}")
-    public String userList(@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize, ModelMap map) {
-        PageBean<UserInfo> pageBean = userService.list(pageNum, pageSize);
-        map.put("pageInfo", pageBean);
-        return "users/list";
+    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
+    public String findAll() {
+        List<UserinfoEntity> uinfos = userRepository.findAll();
+        logger.info(uinfos.toString());
+        return "OK";
     }
 
-    @RequestMapping(value = "/find/{id}")
-    public String userList(@PathVariable("id") Integer id, ModelMap map) {
-        UserInfo uinfo = userService.findUserInfoById(id);
-        map.put("uinfo", uinfo);
-        return "users/userinfo";
+    @RequestMapping(value = "/findBy", method = RequestMethod.GET)
+    public String findBy(@RequestParam(name = "username") String username, @RequestParam(name = "passwd") String passwd) {
+        List<UserinfoEntity> uinfos = userRepository.findByUsernameAndPasswd(username, passwd);
+        logger.info(uinfos.toString());
+        return "OK";
+    }
+
+    @RequestMapping(value = "/findById/{id}", method = RequestMethod.GET)
+    public String findById(@PathVariable(name = "id") Integer id) {
+        Optional<UserinfoEntity> optional = userRepository.findById(id);
+        UserinfoEntity u = optional.orElse(new UserinfoEntity());
+        logger.info(u.toString());
+        return u.toString();
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String add(@RequestBody UserinfoEntity userinfoEntity) {
+        //userRepository.save(userinfoEntity);
+        return "add-OK";
     }
 }
