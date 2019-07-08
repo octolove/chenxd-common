@@ -77,7 +77,7 @@ public class EsTest {
             for (int i = 0; i < 500; i++) {
                 String uid = UUID.randomUUID().toString();
                 UserInfo uinfo = new UserInfo();
-                uinfo.setAddress("测试");
+                uinfo.setAddress("南京市软件大道168号");
                 uinfo.setAge(i);
                 uinfo.setPhone("1595800" + i);
                 uinfo.setName("test_" + i);
@@ -98,10 +98,14 @@ public class EsTest {
 
             // QueryBuilder query = QueryBuilders.rangeQuery("age").gte(20).lt(30);
 
-            QueryBuilder query = QueryBuilders.wildcardQuery("name", "test*");
+            // QueryBuilder query=QueryBuilders.rangeQuery("date").format("yyyyMMdd").gt("20170505").lt("20170530");
+
+            // QueryBuilder query = QueryBuilders.wildcardQuery("name", "test*");
 
             // QueryBuilder query = QueryBuilders.boolQuery().must(QueryBuilders.termsQuery("name", "cxd",
             // "tom")).mustNot(QueryBuilders.rangeQuery("age").gte(23).lt(30));
+
+            QueryBuilder query = QueryBuilders.matchQuery("address", "软件大道").analyzer("ik_max_word");
 
             esutil.query("chenxd", query);
         } catch (IOException e) {

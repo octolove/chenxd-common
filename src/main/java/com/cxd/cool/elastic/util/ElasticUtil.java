@@ -91,6 +91,10 @@ public class ElasticUtil {
             .startObject("address").field("type", "text").field("index", "true").field("analyzer", "ik_max_word").field("search_analyzer", "ik_max_word").endObject()
 
             .startObject("birtydate").field("type", "date").field("index", "true").endObject()
+			
+			// .startObject("birtydate").field("type", "date").field("index",
+            // "true").field("format","yyyy-MM-dd HH:mm:ss").endObject()
+
 
             .endObject().endObject();
 
