@@ -41,7 +41,6 @@ public class RedisRabbitAction {
         rabbitTemplate.convertAndSend("cxdTopicExchange", "cxd.1", new Date().getTime());
         rabbitTemplate.convertAndSend("cxdTopicExchange2", "cxd2.1", new Date().getTime());
         return "hello word";
-
     }
 
     @RequestMapping(value = "/sayhello2")

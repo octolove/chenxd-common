@@ -1,9 +1,15 @@
 package com.cxd.cool.mongo;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="userInfo")
+@Document(collection = "userInfo")
+// name：索引名称 def：字段(1正序 -1倒序) unique：是否唯一索引
+// @CompoundIndexes({ @CompoundIndex(name = "uq_userno_date",
+// def = "{userNo:1, date:-1}",
+// unique = true) })
 public class UserInfo {
 
     @Id

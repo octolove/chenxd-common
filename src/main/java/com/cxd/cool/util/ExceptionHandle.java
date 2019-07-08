@@ -14,8 +14,8 @@ import com.cxd.cool.base.BusinessException;
 /**
  * 统一异常处理
  */
-@ControllerAdvice
-//@RestControllerAdvice
+//@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionHandle {
 
     @ExceptionHandler(BusinessException.class)

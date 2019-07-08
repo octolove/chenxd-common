@@ -4,6 +4,9 @@ import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
 
+/**
+ * 自定义监控
+ */
 @Component
 public class CustomerHealth extends AbstractHealthIndicator {
     @Override

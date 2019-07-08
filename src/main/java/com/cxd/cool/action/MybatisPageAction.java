@@ -12,10 +12,6 @@ import com.cxd.cool.domain.PageBean;
 import com.cxd.cool.domain.UserInfo;
 import com.cxd.cool.service.IUserService;
 
-/**
- * jsp页面demo
- *
- */
 @Controller
 @RequestMapping(value = "/user")
 public class MybatisPageAction {

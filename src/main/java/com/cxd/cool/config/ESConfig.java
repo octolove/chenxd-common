@@ -1,48 +1,40 @@
 package com.cxd.cool.config;
 
 import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-
-import com.cxd.cool.util.ESClientSpringFactory;
 
 @Configuration
-public class ESConfig {
-    @Value("${elasticSearch.host}")
-    private String host;
-
-    @Value("${elasticSearch.port}")
-    private int port;
-
-    @Value("${elasticSearch.client.connectNum}")
-    private Integer connectNum;
-
-    @Value("${elasticSearch.client.connectPerRoute}")
-    private Integer connectPerRoute;
+public class EsConfig {
 
     @Bean
-    public HttpHost httpHost() {
-        return new HttpHost(host, port, "http");
-    }
-
-    @Bean(initMethod = "init",destroyMethod = "close")
-    public ESClientSpringFactory getFactory() {
-        return ESClientSpringFactory.build(httpHost(), connectNum, connectPerRoute);
-    }
-
-    @Bean
-    @Scope("singleton")
-    public RestClient getRestClient() {
-        return getFactory().getClient();
-    }
-
-    @Bean
-    @Scope("singleton")
-    public RestHighLevelClient getRHLClient() {
-        return getFactory().getRhlClient();
+    public RestHighLevelClient client() {
+        RestClientBuilder builder = RestClient.builder(new HttpHost("10.20.12.98", 9200, "http"));
+        // 异步httpclient连接延时配置
+        builder.setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
+            @Override
+            public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
+                requestConfigBuilder.setConnectTimeout(3000);
+                requestConfigBuilder.setSocketTimeout(3000);
+                requestConfigBuilder.setConnectionRequestTimeout(2000);
+                return requestConfigBuilder;
+            }
+        });
+        // 异步httpclient连接数配置
+        builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+            @Override
+            public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                httpClientBuilder.setMaxConnTotal(100);
+                httpClientBuilder.setMaxConnPerRoute(100);
+                return httpClientBuilder;
+            }
+        });
+        RestHighLevelClient client = new RestHighLevelClient(builder);
+        return client;
     }
 }

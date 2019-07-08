@@ -7,11 +7,14 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 
 import com.cxd.cool.mq.listener.IMessageListener;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class RabbitConfigDomain {
 
+    @Autowired
     private ConnectionFactory connectionFactory;
 
+    @Autowired
     private List<IMessageListener> messageListeners;
 
     public RabbitConfigDomain() {

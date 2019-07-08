@@ -1,7 +1,9 @@
 package com.cxd.cool.mq.listener;
 
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.cxd.cool.domain.UserInfo;
@@ -21,7 +23,12 @@ public class OrderListener {
         System.out.println("-------value----------" + value);
 
         // 重新回到原队列
+        //rabbitTemplate.setMessageConverter();
         rabbitTemplate.convertAndSend("cxdTopicExchange", "cxd.1", value + ".122");
+
+        //rabbitTemplate.getMessageConverter().fromMessage()
+        // ChannelAwareMessageListener
+        //SimpleMessageListenerContainer
 
     }
 
