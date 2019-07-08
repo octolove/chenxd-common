@@ -10,13 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -52,7 +52,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(20);
         taskExecutor.setMaxPoolSize(50);
-        taskExecutor.setQueueCapacity(6000);//默认maxValue
+        taskExecutor.setQueueCapacity(6000);// 默认maxValue
         taskExecutor.setKeepAliveSeconds(300);
         taskExecutor.setThreadNamePrefix("thread-");
         taskExecutor.initialize();
@@ -82,18 +82,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/myresoure/**").addResourceLocations("classpath:/myresoure/");
     }
 
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+    /**
+     * 使用fastjson
+     */
+    @Bean
+    public HttpMessageConverters fastJsonHttpMessageConverters() {
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig config = new FastJsonConfig();
         // 保留空的字段
-        config.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
+        config.setSerializerFeatures(SerializerFeature.WriteMapNullValue, SerializerFeature.SortField);
         // 按需配置，更多参考FastJson文档
-        converter.setFastJsonConfig(config);
-        converter.setDefaultCharset(Charset.forName("UTF-8"));
-        converter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
-        converters.add(converter);
+        fastConverter.setFastJsonConfig(config);
+        fastConverter.setDefaultCharset(Charset.forName("UTF-8"));
+        fastConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
 
+        return new HttpMessageConverters(fastConverter);
     }
 
     /**
