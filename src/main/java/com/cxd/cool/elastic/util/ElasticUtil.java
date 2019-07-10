@@ -28,15 +28,7 @@ import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
-import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -250,7 +242,7 @@ public class ElasticUtil {
          * searchSourceBuilder.highlighter(highlightBuilder);
          * 
          * // 加入聚合,分组
-         * TermsAggregationBuilder aggregation = AggregationBuilders.terms("by_company").field("company.keyword");
+         * TermsAggregationBuilder aggregation = AggregationBuilders.terms("by_company").field("company");
          * // 年纪最大
          * aggregation.subAggregation(AggregationBuilders.max("max_age").field("age"));
          * searchSourceBuilder.aggregation(aggregation);

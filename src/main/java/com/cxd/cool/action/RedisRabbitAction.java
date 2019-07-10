@@ -7,9 +7,9 @@ import java.util.List;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.cxd.cool.base.BusinessException;
 import com.cxd.cool.domain.UserInfo;
@@ -19,15 +19,25 @@ import com.cxd.cool.domain.UserInfo;
  * 默认返回json
  *
  */
-//@RestController
-//@RequestMapping(value = "/test")
+// @RestController
+// @RequestMapping(value = "/test")
 public class RedisRabbitAction {
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @RequestMapping(value = "/redisqueue")
+    public String redisqueue() {
+
+        stringRedisTemplate.convertAndSend("mytopic", "queue is ok");
+        return "redisqueue";
+    }
 
     @RequestMapping(value = "/sayhello3")
     public String sayHello3() {
