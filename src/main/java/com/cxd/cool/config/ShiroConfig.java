@@ -35,6 +35,17 @@ public class ShiroConfig {
     }
 
     /**
+     * 配置shiro redisManager,使用的是shiro-redis开源插件
+     */
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost("127.0.0.1:6379");
+        redisManager.setTimeout(1800);
+        redisManager.setDatabase(1);
+        return redisManager;
+    }
+
+    /**
      * cacheManager缓存 redis实现,使用的是shiro-redis开源插件
      */
     @Bean
@@ -54,17 +65,6 @@ public class ShiroConfig {
         redisSessionDAO.setRedisManager(redisManager());
         redisSessionDAO.setKeyPrefix("shiro_session_");
         return redisSessionDAO;
-    }
-
-    /**
-     * 配置shiro redisManager,使用的是shiro-redis开源插件
-     */
-    public RedisManager redisManager() {
-        RedisManager redisManager = new RedisManager();
-        redisManager.setHost("127.0.0.1:6379");
-        redisManager.setTimeout(1800);
-        redisManager.setDatabase(1);
-        return redisManager;
     }
 
     /**

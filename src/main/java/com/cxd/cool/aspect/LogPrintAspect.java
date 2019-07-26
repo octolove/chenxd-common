@@ -22,17 +22,17 @@ public class LogPrintAspect {
     @Around("logPrint()")
     public Object print(ProceedingJoinPoint point) {
         long beginTime = System.currentTimeMillis();
+        String methodName = point.getSignature().getName();
         // 执行方法
         Object result = null;
         try {
             result = point.proceed();
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // 执行时长(毫秒)
         long time = System.currentTimeMillis() - beginTime;
-
-        logger.info("--------------------time------------->>>>>" + (time - beginTime));
+        logger.info("执行{}方法结束,耗时{}", methodName, (time - beginTime));
 
         return result;
     }

@@ -33,8 +33,8 @@ spring:
 
 
     #根据不同环境配置
-#    profiles:
-#        active: dev
+    profiles:
+        active: dev
 
     redis:
        host: 127.0.0.1
@@ -54,14 +54,18 @@ spring:
 #        port: 5672
 #        username: guest
 #        password: guest
+      
+            
+#    kafka:
+#        bootstrap-servers: 127.0.0.1:9092
+#        producer:
+#          key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#          value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#        consumer:
+#          enable-auto-commit: true
+#          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#          value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-
-#    data:
-#        elasticsearch:
-#            repositories:
-#                enabled: true
-#            cluster-nodes: 127.0.0.1:9200
-#            cluster-name: elasticsearch
 
 #    cloud:
 #        loadbalancer:
@@ -79,6 +83,14 @@ server:
     port: 9001
     tomcat:
         uri-encoding: UTF-8
+        
+#es集群
+#elasticsearch:
+#    esHost:
+#    - ip: 10.20.12.98
+#      port: 9200
+#    - ip: 10.20.12.98
+#      port: 9210
 
 #mybatis配置
 mybatis:
@@ -121,7 +133,7 @@ mybatis:
 #    enabled: true
 
 
-#SpringBoot2.x新配置
+#SpringBoot2.x新配置actuator监控
 management:
   server:
     port: 9999

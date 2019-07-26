@@ -19,24 +19,24 @@
             http://www.springframework.org/schema/task   
             http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 
-	<bean id="chenxdJob"
+	<bean id="taskJob"
 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-		<property name="jobClass" value="com.cxd.cool.task.ChenxdJob" />
+		<property name="jobClass" value="com.cxd.cool.task.TaskJob" />
 		<property name="durability" value="true"></property>
 	</bean>
 
-	<bean id="chenxdTrigger"
+	<bean id="taskTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="chenxdJob" />
+		<property name="jobDetail" ref="taskJob" />
 		<!-- cron表达式 -->
 		<property name="cronExpression">
-			<value>0 0/1 * * * ?</value>
+			<value>0 0 1 * * ?</value>
 		</property>
-		<property name="group" value="chenxd.common"></property>
+		<property name="group" value="task.common"></property>
 	</bean>
 
 	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
-	<bean id="chenxdServiceTaskScheduler" lazy-init="false"
+	<bean id="taskServiceTaskScheduler" lazy-init="false"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
 		<property name="dataSource">
@@ -44,7 +44,7 @@
 		</property>
 		<property name="triggers">
 			<list>
-				<ref bean="chenxdTrigger" />
+				<ref bean="taskTrigger" />
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />
@@ -54,7 +54,7 @@
 				<prop key="org.quartz.threadPool.threadCount">1</prop>
 				<prop key="org.quartz.threadPool.threadPriority">5</prop>
 				<prop key="org.quartz.scheduler.instanceId">AUTO</prop>
-				<prop key="org.quartz.scheduler.instanceName">chenxdServiceTaskScheduler</prop>
+				<prop key="org.quartz.scheduler.instanceName">taskServiceTaskScheduler</prop>
 				<prop key="org.quartz.scheduler.rmi.export">false</prop>
 				<prop key="org.quartz.scheduler.rmi.proxy">false</prop>
 				<prop key="org.quartz.scheduler.wrapJobExecutionInUserTransaction">false</prop>
@@ -68,6 +68,6 @@
 				<prop key="org.quartz.jobStore.clusterCheckinInterval">20000</prop>
 			</props>
 		</property>
-		<property name="schedulerName" value="chenxdServiceTaskScheduler" />
+		<property name="schedulerName" value="taskServiceTaskScheduler" />
 	</bean>
 </beans>

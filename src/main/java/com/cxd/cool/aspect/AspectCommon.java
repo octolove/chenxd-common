@@ -24,6 +24,7 @@ import com.cxd.cool.util.IpUtil;
 public class AspectCommon {
 
     private Logger logger = LoggerFactory.getLogger(AspectCommon.class);
+
     /**
      * 每个方法时间统计
      *
@@ -37,27 +38,26 @@ public class AspectCommon {
         int port = -1;
         Object object = null;
         String methodName = null;
-
         long startTime = System.currentTimeMillis();
+        boolean status = false;
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             request = attributes.getRequest();
             url = request.getRequestURL().toString();
             port = request.getRemotePort();
-
             // 拦截的实体类
             Object target = joinPoint.getTarget();
             methodName = joinPoint.getSignature().getName();
             Object[] argsa = joinPoint.getArgs();
             Class[] parameterTypes = ((MethodSignature) joinPoint.getSignature()).getMethod().getParameterTypes();
             Method method = target.getClass().getMethod(methodName, parameterTypes);
-
             // 组织参数列表
             sBuffer = new StringBuffer();
             for (Object arg : argsa) {
                 sBuffer.append(JSON.toJSONString(arg)).append(" | ");
             }
             object = joinPoint.proceed();
+            status = true;
 
         } catch (Throwable e) {
             if (e instanceof BusinessException) {
@@ -76,9 +76,9 @@ public class AspectCommon {
             bean.setPort(port + "");
             bean.setTimes((System.currentTimeMillis() - startTime) + "");
             bean.setUrl(url);
-            logger.info("Around end--------{}", JSON.toJSONString(bean));
+            bean.setStatus(status);
+            logger.info("调用结束打印日志:{}", JSON.toJSONString(bean));
         }
-
         // around需要返回结果
         return object;
     }

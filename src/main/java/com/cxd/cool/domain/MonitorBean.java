@@ -9,6 +9,7 @@ public class MonitorBean implements Serializable {
     private String params;
     private String method;
     private String times;
+    private boolean status;
 
     public String getUrl() {
         return url;
@@ -56,5 +57,13 @@ public class MonitorBean implements Serializable {
 
     public void setTimes(String times) {
         this.times = times;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

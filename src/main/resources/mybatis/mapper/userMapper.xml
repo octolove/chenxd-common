@@ -2,22 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cxd.cool.mapper.UserMapper">
 
-	<select id="findUserInfo"
-		resultType="com.cxd.cool.domain.UserInfo">
+	<select id="findUserInfo" resultType="com.cxd.cool.domain.UserInfo">
 		SELECT
 		id AS uid,
-		username AS uname,
+		username AS
+		uname,
 		passwd AS upass,
 		address
 		FROM
-		USERINFO
+		USER
 		WHERE
 		id =#{id}
 	</select>
 
-	<insert id="inserUser"
-		parameterType="com.cxd.cool.domain.UserInfo">
-		INSERT INTO USERINFO
+	<select id="getUserByUserName" resultType="com.cxd.cool.domain.UserInfo">
+		SELECT
+		id,
+		username,
+		passwd,
+		address
+		FROM
+		USER
+		WHERE
+		username =#{userName}
+	</select>
+
+	<insert id="inserUser" parameterType="com.cxd.cool.domain.UserInfo">
+		INSERT INTO USER
 		(username,
 		passwd,
 		address)
@@ -28,14 +39,29 @@
 		)
 	</insert>
 
-	<select id="findAllUserInfo"
-	resultType="com.cxd.cool.domain.UserInfo">
-	SELECT
-	id AS uid,
-	username AS uname,
-	passwd AS upass,
-	address
-	FROM
-	USERINFO
+	<select id="findAllUserInfo" resultType="com.cxd.cool.domain.UserInfo">
+		SELECT
+		id AS uid,
+		username AS uname,
+		passwd AS upass,
+		address
+		FROM
+		USER
+	</select>
+
+	<select id="getRolesByUserName" resultType="java.lang.String">
+		SELECT r.role_name
+		FROM USER u LEFT JOIN user_role ur
+		ON u.id=ur.user_id LEFT JOIN role r
+		ON ur.role_id=r.role_id
+		WHERE u.username=#{userName}
+	</select>
+
+	<select id="getPermsByUserName" resultType="java.lang.String">
+		SELECT m.perms FROM USER u 
+		LEFT JOIN user_role ur ON u.id=ur.user_id 
+		LEFT JOIN role_menu rm ON ur.role_id=rm.role_id 
+		LEFT JOIN menu m ON  rm.menu_id=m.id 
+		WHERE u.username=#{userName} AND m.mtype=10
 	</select>
 </mapper>  

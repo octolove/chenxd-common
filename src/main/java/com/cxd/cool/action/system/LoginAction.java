@@ -34,7 +34,7 @@ public class LoginAction {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginForm.getUsername(), loginForm.getPassword());
         subject.login(usernamePasswordToken);
-        // token
+        // token返回给调用方,后续请求放入请求头部
         Map<String, Object> result = Render.success();
         result.put("token", subject.getSession().getId());
         return result;
@@ -53,7 +53,7 @@ public class LoginAction {
         method = RequestMethod.GET)
     public Map<String, Object> unauth() {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("code", 304);
+        map.put("code", 401);
         map.put("message", "no unauth");
         return map;
     }
