@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.util.WebUtils;
@@ -23,8 +22,6 @@ public class CustomShiroSession extends DefaultWebSessionManager {
 
     public CustomShiroSession() {
         super();
-        // 设置 shiro session 失效时间，默认为30分钟，这里现在设置为15分钟
-        // setGlobalSessionTimeout(MILLIS_PER_MINUTE * 15);
     }
 
     /**
@@ -33,7 +30,7 @@ public class CustomShiroSession extends DefaultWebSessionManager {
     @Override
     protected Serializable getSessionId(ServletRequest request, ServletResponse response) {
         String sessionId = WebUtils.toHttp(request).getHeader(AUTH_TOKEN);
-        if (StringUtils.isNotEmpty(sessionId)) {
+        if (sessionId != null && !"".equals(sessionId.trim())) {
             // 请求头中如果有 authToken, 则其值为sessionId
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE, REFERENCED_SESSION_ID_SOURCE);
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, sessionId);

@@ -8,9 +8,13 @@ import javax.servlet.Filter;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -31,13 +35,45 @@ public class ShiroConfig {
     }
 
     /**
+     * cacheManager缓存 redis实现,使用的是shiro-redis开源插件
+     */
+    @Bean
+    public RedisCacheManager cacheManager() {
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        redisCacheManager.setKeyPrefix("shiro_cache_"); // 设置前缀
+        return redisCacheManager;
+    }
+
+    /**
+     * RedisSessionDAO shiro sessionDao层的实现 通过redis,使用的是shiro-redis开源插件
+     */
+    @Bean
+    public RedisSessionDAO redisSessionDAO() {
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        redisSessionDAO.setKeyPrefix("shiro_session_");
+        return redisSessionDAO;
+    }
+
+    /**
+     * 配置shiro redisManager,使用的是shiro-redis开源插件
+     */
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost("127.0.0.1:6379");
+        redisManager.setTimeout(1800);
+        redisManager.setDatabase(1);
+        return redisManager;
+    }
+
+    /**
      * 自定义的 shiro session 缓存管理器，用于跨域等情况下使用 token 进行验证，不依赖于sessionId
      */
     @Bean
     public SessionManager sessionManager() {
         CustomShiroSession shiroSession = new CustomShiroSession();
-        // 如果后续考虑多tomcat部署应用，可以使用shiro-redis开源插件来做session 的控制，或者nginx 的负载均衡
-        shiroSession.setSessionDAO(new EnterpriseCacheSessionDAO());
+        shiroSession.setSessionDAO(redisSessionDAO());
         return shiroSession;
     }
 
@@ -45,6 +81,9 @@ public class ShiroConfig {
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(userLoginRealm());
+        // 自定义缓存实现 使用redis
+        securityManager.setCacheManager(cacheManager());
+        // 自定义session管理 使用redis
         securityManager.setSessionManager(sessionManager());
         return securityManager;
     }
@@ -111,5 +150,14 @@ public class ShiroConfig {
         // 对接口配置跨域设置
         source.registerCorsConfiguration("/**", buildConfig());
         return new CorsFilter(source);
+    }
+
+    /**
+     * Shiro生命周期处理器
+     *
+     */
+    @Bean
+    public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
     }
 }

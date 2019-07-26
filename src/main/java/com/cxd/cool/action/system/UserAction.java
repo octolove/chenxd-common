@@ -3,6 +3,7 @@ package com.cxd.cool.action.system;
 import com.cxd.cool.entity.UserinfoEntity;
 import com.cxd.cool.repository.UserRepository;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ public class UserAction {
         return "OK";
     }
 
+    @RequiresPermissions({"sytem:user:add"})
     @RequestMapping(value = "/findById/{id}", method = RequestMethod.GET)
     public String findById(@PathVariable(name = "id") Integer id) {
         Optional<UserinfoEntity> optional = userRepository.findById(id);
@@ -43,7 +45,7 @@ public class UserAction {
         return u.toString();
     }
 
-    @RequiresRoles(value={"test"})
+    @RequiresRoles(value={"admin11"})
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(@RequestBody UserinfoEntity userinfoEntity) {
         //userRepository.save(userinfoEntity);

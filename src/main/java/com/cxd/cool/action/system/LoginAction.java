@@ -57,4 +57,13 @@ public class LoginAction {
         map.put("message", "no unauth");
         return map;
     }
+
+    @RequestMapping("/logout")
+    public Map<String, Object> logout() {
+        SecurityUtils.getSubject().logout();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("code", 202);
+        map.put("message", "login success");
+        return map;
+    }
 }

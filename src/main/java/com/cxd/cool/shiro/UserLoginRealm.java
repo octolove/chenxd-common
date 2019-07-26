@@ -29,10 +29,10 @@ public class UserLoginRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
-        String userName = (String) getAvailablePrincipal(principals);
-        // 根据username查询权限和角色
-        List<String> roles = userService.getRolesByUserName(userName);
-        List<String> perms = userService.getPermsByUserName(userName);
+        UserInfo uinfo = (UserInfo) principals.getPrimaryPrincipal();
+        // 根据username查询权限和角色,直接通过userId查询更简单
+        List<String> roles = userService.getRolesByUserName(uinfo.getUsername());
+        List<String> perms = userService.getPermsByUserName(uinfo.getUsername());
         // 权限
         info.setStringPermissions(new HashSet<String>(perms));
         // 角色
@@ -55,7 +55,7 @@ public class UserLoginRealm extends AuthorizingRealm {
             throw new UnknownAccountException();
         }
 
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(uinfo.getUsername(), uinfo.getPasswd(), getName());
+        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(uinfo, uinfo.getPasswd(), getName());
         return authenticationInfo;
     }
 
