@@ -10,8 +10,8 @@ public interface MenuMapper {
 
     public List<Menu> queryMenu();
 
-    public List<Menu> queryMenuByPid(@Param(value = "parentId") int parentId);
+    public List<Menu> queryMenuByPid(@Param(value = "parentId") int parentId, @Param(value = "mtype") int mtype);
 
-    public List<Menu> queryMenuList(@Param(value = "userId") int userId);
+    public List<Menu> queryMenuList(@Param(value = "userId") int userId, @Param(value = "mtype") int mtype);
 
 }

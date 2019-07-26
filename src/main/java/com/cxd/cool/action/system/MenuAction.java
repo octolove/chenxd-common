@@ -2,7 +2,6 @@ package com.cxd.cool.action.system;
 
 import java.util.List;
 
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cxd.cool.annotation.LogPrint;
 import com.cxd.cool.domain.Menu;
 import com.cxd.cool.service.IUserService;
 
@@ -31,10 +29,17 @@ public class MenuAction {
         return list;
     }
 
-    @RequestMapping(value = "/treeMenu/{userId}",
+    /**
+     * 根据用户菜单和按钮信息
+     * 
+     * @param userId 用户id
+     * @param type 10不含按钮 -1全部菜单
+     * @throws
+     */
+    @RequestMapping(value = "/treeMenu/{userId}/{type}",
         method = RequestMethod.GET)
-    public List<Menu> treeMenu(@PathVariable(name = "userId") Integer userId) {
-        List<Menu> list = userService.getTreeMenuList(userId);
+    public List<Menu> treeMenu(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "type") Integer type) {
+        List<Menu> list = userService.getTreeMenuList(userId, type);
         return list;
     }
 }

@@ -8,7 +8,9 @@
 		mname,
 		url,
 		orderno,
-		mtype
+		mtype,
+		perms,
+		icon
 		FROM
 		menu
 		WHERE parent_id=0 AND mtype!=10
@@ -20,18 +22,26 @@
 		mname,
 		url,
 		orderno,
-		mtype
+		mtype,
+		perms,
+		icon
 		FROM
 		menu
-		WHERE parent_id=#{parentId}
+		WHERE
+		parent_id=#{parentId}
+		<if test="mtype != -1"> AND mtype!=#{mtype} </if>
 	</select>
-	
+
 	<select id="queryMenuList" resultType="com.cxd.cool.domain.Menu">
 		SELECT m.id, parent_id, mname, url, mtype
 		FROM user_role ur
-			LEFT JOIN role_menu rm ON ur.role_id = rm.role_id
-			LEFT JOIN menu m ON rm.menu_id = m.id
-		WHERE ur.user_id = #{userId} AND mtype!=10 AND m.id IS NOT NULL
+		LEFT JOIN
+		role_menu rm ON ur.role_id = rm.role_id
+		LEFT JOIN menu m ON rm.menu_id
+		= m.id
+		WHERE ur.user_id = #{userId}
+		<if test="mtype != -1"> AND mtype!=#{mtype} </if>
+		AND m.id IS NOT NULL
 	</select>
 
 </mapper>  

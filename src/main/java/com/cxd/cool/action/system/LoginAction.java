@@ -45,7 +45,7 @@ public class LoginAction {
     public Map<String, Object> nologin() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("code", 301);
-        map.put("message", "no login");
+        map.put("message", "请先登陆");
         return map;
     }
 
@@ -54,7 +54,7 @@ public class LoginAction {
     public Map<String, Object> unauth() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("code", 401);
-        map.put("message", "no unauth");
+        map.put("message", "禁止访问");
         return map;
     }
 
@@ -63,7 +63,7 @@ public class LoginAction {
         SecurityUtils.getSubject().logout();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("code", 202);
-        map.put("message", "login success");
+        map.put("message", "成功退出");
         return map;
     }
 }

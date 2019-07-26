@@ -70,12 +70,14 @@ public class IUserService {
 
     /**
      * 获取所有菜单
+     * mtype=10 过滤按钮类型菜单
+     * mtype=-1 不处理
      */
     public List<Menu> getMenu() {
         List<Menu> menulist = menuMapper.queryMenu();
         if (menulist != null && menulist.size() > 0) {
             for (Menu m : menulist) {
-                List<Menu> list = subMenu(m.getId());
+                List<Menu> list = subMenu(m.getId(), -1);
                 if (list != null && list.size() > 0) {
                     m.setMenulist(list);
                 }
@@ -87,13 +89,15 @@ public class IUserService {
 
     /**
      * 根据userId(权限)获取菜单
+     * mtype=10 过滤按钮类型菜单
+     * mtype=-1 不处理
      */
-    public List<Menu> getTreeMenuList(int userId) {
-        List<Menu> menuList = menuMapper.queryMenuList(userId);
+    public List<Menu> getTreeMenuList(int userId, int type) {
+        List<Menu> menuList = menuMapper.queryMenuList(userId, type);
         List<Menu> menulist = menuList.stream().filter(tm -> tm.getParent_id() == 0).collect(Collectors.toList());
         if (menulist != null && menulist.size() > 0) {
             for (Menu m : menulist) {
-                List<Menu> list = subMenu(m.getId());
+                List<Menu> list = subMenu(m.getId(), type);
                 if (list != null && list.size() > 0) {
                     m.setMenulist(list);
                 }
@@ -102,11 +106,11 @@ public class IUserService {
         return menulist;
     }
 
-    public List<Menu> subMenu(int parentId) {
-        List<Menu> list = menuMapper.queryMenuByPid(parentId);
+    public List<Menu> subMenu(int parentId, int type) {
+        List<Menu> list = menuMapper.queryMenuByPid(parentId, type);
         if (list != null && list.size() > 0) {
             for (Menu m : list) {
-                List<Menu> list2 = subMenu(m.getId());
+                List<Menu> list2 = subMenu(m.getId(), type);
                 if (list2 != null && list2.size() > 0) {
                     m.setMenulist(list2);
                 }

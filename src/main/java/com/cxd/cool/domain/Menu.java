@@ -9,6 +9,8 @@ public class Menu {
     private String url;
     private int orderno;
     private int mtype;
+    private String perms;
+    private String icon;
 
     private List<Menu> menulist;
 
@@ -67,4 +69,21 @@ public class Menu {
     public void setMenulist(List<Menu> menulist) {
         this.menulist = menulist;
     }
+
+    public String getPerms() {
+        return perms;
+    }
+
+    public void setPerms(String perms) {
+        this.perms = perms;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
 }

@@ -7,7 +7,6 @@ import javax.servlet.Filter;
 
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
-import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -93,9 +92,9 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-        // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+        // 没有登录的用户请求需要登录的页面时自动跳转到登录页面
         shiroFilterFactoryBean.setLoginUrl("/login/nologin");
-        // 成功后首页--认证成功统一跳转到/admin/index.do，建议不配置，shiro认证成功自动到上一个请求路径
+        // 没有权限默认跳转的页面，登录的用户访问了没有被授权的资源自动跳转到的页面
         shiroFilterFactoryBean.setSuccessUrl("/index");
         // 错误页面，认证不通过跳转
         shiroFilterFactoryBean.setUnauthorizedUrl("/login/unauth");
@@ -106,7 +105,6 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/css/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/img/**", "anon");
-        filterChainDefinitionMap.put("/dist/**", "anon");
         filterChainDefinitionMap.put("/plugins/**", "anon");
 
         filterChainDefinitionMap.put("/**", "authc");
