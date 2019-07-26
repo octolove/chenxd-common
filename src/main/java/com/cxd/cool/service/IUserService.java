@@ -1,15 +1,16 @@
 package com.cxd.cool.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cxd.cool.domain.Menu;
 import com.cxd.cool.domain.PageBean;
 import com.cxd.cool.domain.UserInfo;
+import com.cxd.cool.mapper.MenuMapper;
 import com.cxd.cool.mapper.UserMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -19,6 +20,9 @@ public class IUserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
@@ -64,29 +68,64 @@ public class IUserService {
         return pageBean;
     }
 
-    public void batchInsert() {
-        // 关闭session的自动提交
-        SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-        // 利用反射生成mapper对象
-        UserMapper umapper = session.getMapper(UserMapper.class);
-        // try {
-        // int i = 0;
-        // for (Fenshu fs : fenshuList) {
-        // excelMapper.saveFenshu(tableName, courseName, current, fs.getXuehao(), fs.getShijuanming(),
-        // fs.getDenglushijian(), fs.getJiaojuanshijian(), fs.getShitileixing(),
-        // fs.getShitixuhao(), fs.getShititikuhao(), fs.getShitifenzhi(), fs.getXueshengdefen(), fs.getDatiyongshi());
-        // if (i % 1000 == 0 || i == fenshuList.size() - 1) {
-        // // 手动每1000个一提交，提交后无法回滚
-        // session.commit();
-        // session.clearCache();// 注意，如果没有这个动作，可能会导致内存崩溃。
-        // }
-        // i++;
-        // }
-        // } catch (Exception e) {
-        // // 没有提交的数据可以回滚
-        // session.rollback();
-        // } finally {
-        // session.close();
-        // }
+    /**
+     * 获取所有菜单
+     */
+    public List<Menu> getMenu() {
+        List<Menu> menulist = menuMapper.queryMenu();
+        if (menulist != null && menulist.size() > 0) {
+            for (Menu m : menulist) {
+                List<Menu> list = subMenu(m.getId());
+                if (list != null && list.size() > 0) {
+                    m.setMenulist(list);
+                }
+            }
+        }
+        return menulist;
+
+    }
+
+    /**
+     * 根据userId(权限)获取菜单
+     */
+    public List<Menu> getTreeMenuList(int userId) {
+        List<Menu> menuList = menuMapper.queryMenuList(userId);
+        List<Menu> menulist = menuList.stream().filter(tm -> tm.getParent_id() == 0).collect(Collectors.toList());
+        if (menulist != null && menulist.size() > 0) {
+            for (Menu m : menulist) {
+                List<Menu> list = subMenu(m.getId());
+                if (list != null && list.size() > 0) {
+                    m.setMenulist(list);
+                }
+            }
+        }
+        return menulist;
+    }
+
+    public List<Menu> subMenu(int parentId) {
+        List<Menu> list = menuMapper.queryMenuByPid(parentId);
+        if (list != null && list.size() > 0) {
+            for (Menu m : list) {
+                List<Menu> list2 = subMenu(m.getId());
+                if (list2 != null && list2.size() > 0) {
+                    m.setMenulist(list2);
+                }
+            }
+        }
+        return list;
+    }
+
+    public UserInfo getUserByUserName(String userName) {
+        return userMapper.getUserByUserName(userName);
+    }
+
+    public List<String> getRolesByUserName(String userName) {
+        return userMapper.getRolesByUserName(userName);
+
+    }
+
+    public List<String> getPermsByUserName(String userName) {
+        return userMapper.getPermsByUserName(userName);
+
     }
 }

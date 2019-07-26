@@ -22,7 +22,7 @@ public class SystemConditional {
     public UserInfo getWin() {
         System.out.println("-------------------------->window");
         UserInfo userInfo = new UserInfo();
-        userInfo.setUname("window");
+        userInfo.setUsername("window");
         return userInfo;
     }
 
@@ -31,7 +31,7 @@ public class SystemConditional {
     public UserInfo getLinux() {
         System.out.println("-------------------------->linux");
         UserInfo userInfo = new UserInfo();
-        userInfo.setUname("linux");
+        userInfo.setUsername("linux");
         return userInfo;
     }
 }

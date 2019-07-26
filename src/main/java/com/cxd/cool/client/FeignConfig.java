@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import com.alibaba.fastjson.JSONObject;
 import com.cxd.cool.base.BusinessException;
 
-import feign.Request;
 import feign.Response;
 import feign.Util;
 import feign.codec.ErrorDecoder;
@@ -45,11 +44,6 @@ public class FeignConfig {
         };
     }
     
-//    @Bean
-//    public Request.Options feignRequestOptions() {
-//        return new Request.Options(4000,4000);
-//    }
-
     private BusinessException readForBusinessException(String body) {
         int code = 2;
         String message = "未知错误！";

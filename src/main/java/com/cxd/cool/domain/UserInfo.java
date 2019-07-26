@@ -6,36 +6,36 @@ public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = 3015670608993048826L;
 
-    private String uid;
+    private String id;
 
-    private String upass;
+    private String passwd;
 
-    private String uname;
+    private String username;
 
     private String address;
 
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUpass() {
-        return upass;
+    public String getPasswd() {
+        return passwd;
     }
 
-    public void setUpass(String upass) {
-        this.upass = upass;
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
     }
 
-    public String getUname() {
-        return uname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUname(String uname) {
-        this.uname = uname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAddress() {
@@ -46,4 +46,8 @@ public class UserInfo implements Serializable {
         this.address = address;
     }
 
+    @Override
+    public String toString() {
+        return "UserInfo [id=" + id + ", passwd=" + passwd + ", username=" + username + ", address=" + address + "]";
+    }
 }
